@@ -11,10 +11,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.reflect.Field;
 import java.nio.channels.FileChannel.MapMode;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
@@ -34,7 +31,7 @@ public class UniqueIPCounter {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        if (args.length != 1) {
+        if (args.length < 1) {
             System.out.println("Usage: java UniqueIPCounter <file_path>");
             return;
         }
@@ -43,11 +40,12 @@ public class UniqueIPCounter {
         final var uniqueIPs = new MaxBitSet();
         final File file = new File(filePath);
         final long length = file.length();
+        final long chunkSize = args.length > 1 ? Long.parseLong(args[1]) : 1024 * 1024 * 1024; // 1GB
 
-        final var chunkStartOffsets = new long[NUM_THREADS];
+        final var chunkStartOffsets = new long[(int) Math.ceilDiv(length, chunkSize)];
         try (var raf = new RandomAccessFile(file, "r")) {
             for (int i = 1; i < chunkStartOffsets.length; i++) {
-                var start = length * i / chunkStartOffsets.length;
+                var start = chunkStartOffsets[i - 1] + chunkSize;
                 raf.seek(start);
                 while (raf.read() != (byte) '\n') {
                 }
@@ -55,12 +53,15 @@ public class UniqueIPCounter {
                 chunkStartOffsets[i] = start;
             }
             final var mappedFile = raf.getChannel().map(MapMode.READ_ONLY, 0, length, Arena.global());
-            try (ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS, new RegionProcessorThreadFactory())) {
-                for (int i = 0; i < NUM_THREADS; i++) {
+            printStats();
+            try (ExecutorService executor = new ForkJoinPool(NUM_THREADS,
+                    ForkJoinPool.defaultForkJoinWorkerThreadFactory,
+                    null, true)) {
+                for (int i = 0; i < chunkStartOffsets.length; i++) {
                     final long chunkStart = chunkStartOffsets[i];
-                    final long chunkLimit = (i + 1 < NUM_THREADS) ? chunkStartOffsets[i + 1] : length;
+                    final long chunkLimit = (i + 1 < chunkStartOffsets.length) ? chunkStartOffsets[i + 1] : length;
                     executor.execute(new ChunkProcessor(
-                            mappedFile.asSlice(chunkStart, chunkLimit - chunkStart), uniqueIPs, i));
+                            mappedFile.asSlice(chunkStart, chunkLimit - chunkStart), uniqueIPs));
                 }
                 executor.shutdown();
                 executor.awaitTermination(1, TimeUnit.HOURS);
@@ -80,7 +81,24 @@ public class UniqueIPCounter {
 //            e.printStackTrace();
 //        }
 
-        System.out.println("Number of unique IP addresses: " + uniqueIPs.count());
+        System.out.println("Number of unique IP addresses: " + uniqueIPs.count());UniqueIPCounter
+    }
+
+    private static void printStats() {
+        // Get current size of heap in bytes.
+        long heapSize = Runtime.getRuntime().totalMemory();
+
+        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.
+        // Any attempt will result in an OutOfMemoryException.
+        long heapMaxSize = Runtime.getRuntime().maxMemory();
+
+        // Get amount of free memory within the heap in bytes. This size will
+        // increase after garbage collection and decrease as new objects are created.
+        long heapFreeSize = Runtime.getRuntime().freeMemory();
+
+        System.out.println("heap size: " + heapSize / 1024 / 1024
+                + "MB; max size: " + heapMaxSize / 1024 / 1024
+                + "MB; free: " + heapFreeSize / 1024 / 1024 + "MB;");
     }
 
     private static class RegionProcessorThreadFactory implements ThreadFactory {
@@ -94,12 +112,25 @@ public class UniqueIPCounter {
 
     }
 
+    private static class ForkRegionProcessorThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+        @Override
+        public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+            final ForkJoinWorkerThread worker = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
+
+            worker.setDaemon(true);
+            worker.setPriority(Thread.MAX_PRIORITY);
+
+            return worker;
+        }
+    }
+
     private static class ChunkProcessor implements Runnable {
         private final MemorySegment chunk;
         private final long base;
         private final MaxBitSet uniqueIPs;
 
-        ChunkProcessor(MemorySegment chunk, MaxBitSet uniqueIPs, int myIndex) {
+        ChunkProcessor(MemorySegment chunk, MaxBitSet uniqueIPs) {
+            System.out.println("chunk " + chunk.address());
             this.chunk = chunk;
             this.base = chunk.address();
             this.uniqueIPs = uniqueIPs;
@@ -108,10 +139,11 @@ public class UniqueIPCounter {
         @Override
         public void run() {
             for (var cursor = 0L; cursor < chunk.byteSize(); ) {
+//                printStats();
                 var newlinePos = findByte(
                         cursor,
                         '\n');
-                int ipInt = convertIPToBigEndian6(cursor, newlinePos);
+                int ipInt = convertIPToBigEndian7(cursor, newlinePos);
                 uniqueIPs.set(ipInt);
 
                 cursor = newlinePos + 1;
@@ -199,26 +231,26 @@ public class UniqueIPCounter {
             return ipInt;
         }
 
-        private int convertIPToBigEndian5(long cursor, long newlinePos) {
-            int ipInt = 0;
-            int octet = 0;
-            while (cursor < newlinePos) {
-                // wrong
-                var c = UNSAFE.getChar(base + cursor);
-                if (c == '.') {
-                    ipInt = (ipInt << 8) | octet;
-                    octet = 0;
-                } else {
-                    octet *= 10;
-                    octet += c - '0';
-                }
-                cursor++;
-            }
-
-            ipInt = (ipInt << 8) | octet;
-
-            return ipInt;
-        }
+//        private int convertIPToBigEndian5(long cursor, long newlinePos) {
+//            int ipInt = 0;
+//            int octet = 0;
+//            while (cursor < newlinePos) {
+//                // wrong
+//                var c = UNSAFE.getChar(base + cursor);
+//                if (c == '.') {
+//                    ipInt = (ipInt << 8) | octet;
+//                    octet = 0;
+//                } else {
+//                    octet *= 10;
+//                    octet += c - '0';
+//                }
+//                cursor++;
+//            }
+//
+//            ipInt = (ipInt << 8) | octet;
+//
+//            return ipInt;
+//        }
 
         private static final VectorSpecies<Integer> SPECIES = IntVector.SPECIES_128;
         private static final IntVector OFFSETS = IntVector.fromArray(SPECIES, new int[]{24, 16, 8, 0}, 0);
@@ -232,6 +264,27 @@ public class UniqueIPCounter {
 
             for (int i = 0; i < ip.length(); i++) {
                 char c = ip.charAt(i);
+                if (c == '.') {
+                    bytes[byteIndex++] = currentByte;
+                    currentByte = 0;
+                } else {
+                    currentByte = currentByte * 10 + (c - '0');
+                }
+            }
+            bytes[byteIndex] = currentByte; // Store the last byte
+
+            IntVector vector = IntVector.fromArray(SPECIES, bytes, 0).lanewise(VectorOperators.LSHL, OFFSETS);
+
+            return vector.reduceLanes(VectorOperators.OR);
+        }
+
+        private int convertIPToBigEndian7(long cursor, long newlinePos) {
+            int[] bytes = new int[4];
+            int byteIndex = 0;
+            int currentByte = 0;
+
+            for (long i = cursor; i < newlinePos; i++) {
+                byte c = chunk.get(JAVA_BYTE, i);
                 if (c == '.') {
                     bytes[byteIndex++] = currentByte;
                     currentByte = 0;
@@ -282,6 +335,7 @@ public class UniqueIPCounter {
         /**
          * The internal field corresponding to the serialField "bits".
          */
+        // todo atomic
         private final long[] words;
 
         /**
