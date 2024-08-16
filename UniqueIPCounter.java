@@ -18,6 +18,7 @@ import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
 public class UniqueIPCounter {
     private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+    private static final long ONE_GB = 1024 * 1024 * 1024;
     private static final Unsafe UNSAFE = unsafe();
 
     private static Unsafe unsafe() {
@@ -40,23 +41,59 @@ public class UniqueIPCounter {
         final var uniqueIPs = new MaxBitSet();
         final File file = new File(filePath);
         final long length = file.length();
-        final long chunkSize = args.length > 1 ? Long.parseLong(args[1]) : 1024 * 1024 * 1024; // 1GB
+        final long chunkSize =
+                Math.min(
+                        args.length > 1 ? Long.parseLong(args[1]) : 2 * ONE_GB,
+                        Math.ceilDiv(length, NUM_THREADS)
+                );
+        System.out.println("size " + length);
+        if (length < 1024 * 1024) {
+            System.out.println("using a single thread");
+            unchunkedExecute(length, file, uniqueIPs);
+        } else {
+            parallelExecute(chunkSize, length, file, uniqueIPs);
+        }
 
+        System.out.println("Number of unique IP addresses: " + uniqueIPs.count());
+    }
+
+    private static void unchunkedExecute(
+            long length,
+            File file,
+            MaxBitSet uniqueIPs
+    ) throws IOException {
+        try (var raf = new RandomAccessFile(file, "r")) {
+            final var mappedFile = raf.getChannel().map(MapMode.READ_ONLY, 0, length, Arena.global());
+            var worker = new ChunkProcessor(mappedFile.asSlice(0, length), uniqueIPs);
+            worker.run();
+        }
+    }
+
+    private static void parallelExecute(
+            long chunkSize,
+            long length,
+            File file,
+            MaxBitSet uniqueIPs
+    ) throws IOException, InterruptedException {
         final var chunkStartOffsets = new long[(int) Math.ceilDiv(length, chunkSize)];
         try (var raf = new RandomAccessFile(file, "r")) {
             for (int i = 1; i < chunkStartOffsets.length; i++) {
                 var start = chunkStartOffsets[i - 1] + chunkSize;
                 raf.seek(start);
-                while (raf.read() != (byte) '\n') {
+                while (true) {
+                    var nextByte = raf.read();
+                    if (nextByte == (byte) '\n' || nextByte == -1) {
+                        break;
+                    }
                 }
                 start = raf.getFilePointer();
                 chunkStartOffsets[i] = start;
             }
+
             final var mappedFile = raf.getChannel().map(MapMode.READ_ONLY, 0, length, Arena.global());
             printStats();
-            try (ExecutorService executor = new ForkJoinPool(NUM_THREADS,
-                    ForkJoinPool.defaultForkJoinWorkerThreadFactory,
-                    null, true)) {
+            try (ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS,
+                    new RegionProcessorThreadFactory())) {
                 for (int i = 0; i < chunkStartOffsets.length; i++) {
                     final long chunkStart = chunkStartOffsets[i];
                     final long chunkLimit = (i + 1 < chunkStartOffsets.length) ? chunkStartOffsets[i + 1] : length;
@@ -67,21 +104,6 @@ public class UniqueIPCounter {
                 executor.awaitTermination(1, TimeUnit.HOURS);
             }
         }
-
-//        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                final String ipLine = line;
-//                executor.execute(() -> {
-//                    int ipInt = convertIPToBigEndian2(ipLine);
-//                    uniqueIPs.set(ipInt);
-//                });
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        System.out.println("Number of unique IP addresses: " + uniqueIPs.count());UniqueIPCounter
     }
 
     private static void printStats() {
@@ -130,7 +152,6 @@ public class UniqueIPCounter {
         private final MaxBitSet uniqueIPs;
 
         ChunkProcessor(MemorySegment chunk, MaxBitSet uniqueIPs) {
-            System.out.println("chunk " + chunk.address());
             this.chunk = chunk;
             this.base = chunk.address();
             this.uniqueIPs = uniqueIPs;
