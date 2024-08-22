@@ -5,7 +5,7 @@ sample/
 
 *.class
 
-uniqueipcounter
+uniqueipcounter*
 
 out/
 

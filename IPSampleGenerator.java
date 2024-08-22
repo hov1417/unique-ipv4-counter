@@ -25,9 +25,9 @@ public class IPSampleGenerator {
 
     private static String generateRandomIP() {
         Random random = new Random();
-        return random.nextInt(256) + "." +
-                random.nextInt(256) + "." +
-                random.nextInt(256) + "." +
-                random.nextInt(256);
+        return random.nextInt(10, 100) + "." +
+                random.nextInt(100, 256) + "." +
+                random.nextInt(100, 256) + "." +
+                random.nextInt(100, 256);
     }
 }
