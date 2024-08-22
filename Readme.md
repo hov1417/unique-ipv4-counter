@@ -264,7 +264,7 @@ return (int) (
         | ((((value2 >>> 24) * MULTIPLIER_0) >>> 16) & 0xFFL)
 )
 ```
-which is faster for 1-2% then the first one.
+which is faster for 1-2% than the first one.
 
 Yet this would take me at least few days, and I'm already working on this for a week,
 so I decided to stick to my implementation.
