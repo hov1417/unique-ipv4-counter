@@ -46,9 +46,9 @@ public class UniqueIPCounter {
                 .getInputStream()
                 .transferTo(System.out);
 //        uncomment when debugging
-        process
-                .getErrorStream()
-                .transferTo(System.out);
+//        process
+//                .getErrorStream()
+//                .transferTo(System.out);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -118,26 +118,24 @@ public class UniqueIPCounter {
         return address + (Long.numberOfTrailingZeros(lfpos_code) >>> 3) + 1;
     }
 
-    // Parse number
-    static int num(long w, long d) {
+    /**
+     * Convert string IP to number
+     *
+     * @param address address from which start parsing
+     * @param newLine next new Line address
+     * @return parsed number
+     */
+    static int num(long address, long newLine) {
 //      length from 7 (1.1.1.1) to 15 (111.111.111.111) so it is either 1 or 2 longs
-        // d - w == 8 case is only when x.x.x.x
-        // TODO bench with removed branch
-//        if (d - w == 8) {
-//            var value = UNSAFE.getLong(w);
-//            return (int) ((value & 0x00_00_00_00_00_00_00_0FL) |
-//                    ((value & 0x00_00_00_00_00_0F_00_00L) >> 8) |
-//                    ((value & 0x00_00_00_0F_00_00_00_00L) >> 16) |
-//                    ((value & 0x00_0F_00_00_00_00_00_00L) >> 24)
-//            );
-//        } else {
-        var value1 = UNSAFE.getLong(w) & 0x0F_0F_0F_0F_0F_0F_0F_0FL;
-        var value2 = UNSAFE.getLong(w + 8) & 0x0F_0F_0F_0F_0F_0F_0F_0FL;
+        var value1 = UNSAFE.getLong(address) & 0x0F_0F_0F_0F_0F_0F_0F_0FL;
+        var value2 = UNSAFE.getLong(address + 8) & 0x0F_0F_0F_0F_0F_0F_0F_0FL;
         int shiftSize = 24;
         byte currentByte = 0;
 
         int result = 0;
-        for (int i = 0; i < 8; i++) {
+        var len = newLine - address - 1;
+        var endIndex = Math.min(len, 8);
+        for (int i = 0; i < endIndex; i++) {
             byte c = (byte) (value1 & 0xFFL);
             value1 >>>= 8;
             if (c == 0x0e) {
@@ -148,7 +146,7 @@ public class UniqueIPCounter {
                 currentByte = (byte) (currentByte * 10 + c);
             }
         }
-        var endIndex = d - w - 9; // Long.numberOfTrailingZeros(getLFCode(value2)) >> 3;
+        endIndex = len - 8;
         for (int i = 0; i < endIndex; i++) {
             byte c = (byte) (value2 & 0xFFL);
             value2 >>>= 8;

@@ -38,7 +38,7 @@ make it slower than current implementation.
 
 #### Profile Guided Optimization of GrallVM
 Using PGO made it a little bit slowed, I suspect the reason is that GraalVM PGO adds conditions for hot code segments,
-to heavily optimize some specific cases, which increases branch-misses. (TODO test this with perf).
+to heavily optimize some specific cases, added overhead slows down (perf stat: 101,478,420,847 vs 60,508,794,883 branches).
 
 #### GC tuning
 VisualVM shows very little GC overhead, so doesn't make sense to optimize the GC.
@@ -270,8 +270,13 @@ Yet this would take me at least few days, and I'm already working on this for a 
 so I decided to stick to my implementation.
 
 #### Work Stealing Execution
-I tried using ForkJoinPool, which did not help. It's faster when code manages work stealing. 
+I tried using ForkJoinPool, which did not help. It's faster when code manages work stealing.
 
+
+#### Per Thread Bitset
+Storing bitset per thread without atomics, then combining and adding.
+
+I also tried storing in an array per chunk then locking global bitset and adding all values. 
 
 
 ## Results
@@ -287,3 +292,21 @@ Tested on Intel® Core™ i7-9750H CPU with 16GB RAM.
 | 8'000'000'000 | 67.723 s     | 2.419 s            | 63.975 s - 72.091 s  | 10             | 13.1G BG   |
 
 
+## Running
+
+```bash
+./compile.sh
+
+./uniqueipcounter [path/to/the/input/file]
+```
+
+
+### References
+- https://questdb.io/blog/billion-row-challenge-step-by-step/
+- https://www.jbang.dev/documentation/guide/latest/index.html
+- https://perf.wiki.kernel.org/index.php/Main_Page
+- https://docs.oracle.com/javase/8/docs/technotes/guides/visualvm/
+- https://github.com/async-profiler/async-profiler
+- https://questdb.io/blog/1brc-merykittys-magic-swar/
+- http://0x80.pl/notesen/2023-04-09-faster-parse-ipv4.html#scalar-conversion
+- https://lemire.me/blog/2023/06/08/parsing-ip-addresses-crazily-fast/
