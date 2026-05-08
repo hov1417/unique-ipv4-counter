@@ -15,7 +15,7 @@ UniqueIPCounter class generally speaking does this steps
 
 | Optimization                          | Description                                                                                     |
 |---------------------------------------|-------------------------------------------------------------------------------------------------|
-| GraalVM                               | Used graalvm-jdk-22.0.2+9.1 native image, as specified in .java-version                         |
+| GraalVM                               | Used graalvm-jdk native image, as specified in .java-version                                    |
 | Parallelization                       | Used as many threads as processors available to the Java virtual machine.                       |
 | Reducing allocations                  | Removed almost all the allocations                                                              |
 | Small Chunks                          | Parsing in small chunks, each thread when available takes next the chunk, 8MB worked best       |
@@ -88,152 +88,7 @@ if (hashcode == -268435456) {
     return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF)) << 8) | (((((value2 >>> 32) & 0xFF) * 10) + ((value2 >>> 40) & 0xFF))));
 } else if (hashcode == 8417280) {
     return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == 12595200) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == 14684160) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | (((((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -2143277056) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -2141188096) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | (((((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -1071640576) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | (((((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == 8405040) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 8413200) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 12591120) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -2143281136) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 545275936) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 61440) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -2147454976) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -1073729536) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | (((value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 100) + (((value2 >>> 24) & 0xFF) * 10) + ((value2 >>> 32) & 0xFF))));
-} else if (hashcode == -536866816) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF)) << 8) | ((((value2 >>> 32) & 0xFF))));
-} else if (hashcode == 32880) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 49200) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 57360) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 8388720) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 12582960) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 14680080) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | ((((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -2147467216) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -2147459056) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -2143289296) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 100) + (((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -2141192176) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | ((((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -1073733616) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | (((value2 & 0xFF)) << 8) | (((((value2 >>> 16) & 0xFF) * 10) + ((value2 >>> 24) & 0xFF))));
-} else if (hashcode == -1071644656) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF)) << 8) | ((((value2 >>> 24) & 0xFF))));
-} else if (hashcode == 1610645568) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 536903776) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 536920096) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 1619001408) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 545259616) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 1619017728) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 545284096) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 549453856) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 549462016) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -1610596320) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -1606418400) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | (((((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -1606410240) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 1075871808) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 1084227648) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 1084243968) {Remove
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 10502176) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -536838144) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 1610661888) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == 536928256) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -536854528) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 100) + (((value2 >>> 8) & 0xFF) * 10) + ((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -1610588160) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -536862720) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 16) | (((value2 & 0xFF)) << 8) | ((((value2 >>> 16) & 0xFF))));
-} else if (hashcode == -2141159424) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -1071611904) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 6324288) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 2130016) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 1075888128) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 2146336) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 14680128) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 100) + ((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 10485856) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 100) + (((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == 14680096) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 100) + (((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -1071628288) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | ((((value2 & 0xFF) * 10) + ((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -2145370080) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -2141192160) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 16) | ((((value1 >>> 56) & 0xFF)) << 8) | ((((value2 >>> 8) & 0xFF))));
-} else if (hashcode == -2143248384) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF))));
-} else if (hashcode == 4235328) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF))));
-} else if (hashcode == 1073782848) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == 12591168) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | (((((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF))));
-} else if (hashcode == 1082138688) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | (((((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == 1082155008) {
-    return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | (((((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == -2147426304) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | ((((value1 >>> 32) & 0xFF)) << 8) | (((((value1 >>> 48) & 0xFF) * 100) + (((value1 >>> 56) & 0xFF) * 10) + (value2 & 0xFF))));
-} else if (hashcode == -1073700864) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 100) + (((value1 >>> 40) & 0xFF) * 10) + ((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == 1073799168) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 100) + (((value1 >>> 24) & 0xFF) * 10) + ((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == -1073717248) {
-    return (int) (((((value1 & 0xFF) * 100) + (((value1 >>> 8) & 0xFF) * 10) + ((value1 >>> 16) & 0xFF)) << 24) | ((((value1 >>> 32) & 0xFF)) << 16) | ((((value1 >>> 48) & 0xFF)) << 8) | (((value2 & 0xFF))));
-} else if (hashcode == -2147434464) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | ((((value1 >>> 32) & 0xFF)) << 8) | (((((value1 >>> 48) & 0xFF) * 10) + ((value1 >>> 56) & 0xFF))));
-} else if (hashcode == -2143256544) {
-    return (int) ((((value1 & 0xFF)) << 24) | ((((value1 >>> 16) & 0xFF)) << 16) | (((((value1 >>> 32) & 0xFF) * 10) + ((value1 >>> 40) & 0xFF)) << 8) | ((((value1 >>> 56) & 0xFF))));
-} else if (hashcode == 4227168) {
-    return (int) ((((value1 & 0xFF)) << 24) | (((((value1 >>> 16) & 0xFF) * 10) + ((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | ((((value1 >>> 56) & 0xFF))));
+        ...
 } else if (hashcode == 12583008) {
     return (int) (((((value1 & 0xFF) * 10) + ((value1 >>> 8) & 0xFF)) << 24) | ((((value1 >>> 24) & 0xFF)) << 16) | ((((value1 >>> 40) & 0xFF)) << 8) | ((((value1 >>> 56) & 0xFF))));
 }
@@ -280,16 +135,16 @@ I also tried storing in an array per chunk then locking global bitset and adding
 
 
 ## Results
-Tested on Intel® Core™ i7-9750H CPU with 16GB RAM.
+Tested on `AMD Ryzen 9 9950X 16-Core Processor` CPU with 64GB RAM.
 
-| Size          | Average Time | Standard Deviation | Range                | Number of Runs | Max Memory |
-|---------------|--------------|--------------------|----------------------|----------------|------------|
-| 10            | 225.1 ms     | 6.1 ms             | 219.6 ms - 252.9 ms  | 100            | 11 MB      |
-| 10'000        | 246.4 ms     | 3.4 ms             | 241.5 ms - 256.5 ms  | 100            | 12 MB      |
-| 1'000'000     | 501.8 ms     | 7.7 ms             | 492.7 ms - 533 ms    | 100            | 551 MB     |
-| 100'000'000   | 904.0 ms     | 38.1 ms            | 812.9 ms - 1000.9 ms | 100            | 1.4 GB     |
-| 1'000'000'000 | 8.833 s      | 532 ms             | 7.993 s -  9.560 s   | 10             | 10.6 GB    |
-| 8'000'000'000 | 67.723 s     | 2.419 s            | 63.975 s - 72.091 s  | 10             | 13.1G BG   |
+| Size          | Average Time | Standard Deviation | Range                | Number of Runs | Max Resident Memory |
+|---------------|--------------|--------------------|----------------------|----------------|---------------------|
+| 10            | 261.5 ms     | 5.4 ms             | 249.3 ms - 278.7 ms  | 100            | 537 MB              |
+| 10'000        | 265.3 ms     | 5.1 ms             | 255.2 ms - 276.9 ms  | 100            | 536 MB              |
+| 1'000'000     | 341.4 ms     | 8.7 ms             | 326.0 ms - 373.4 ms  | 100            | 551 MB              |
+| 100'000'000   | 834.5 ms     | 11.1 ms            | 813.2 ms - 884.5 ms  | 100            | 537 MB              |
+| 1'000'000'000 | 5.485 s      | 30 ms              | 5.446 s -  5.532 s   | 10             | 14.4 GB             |
+| 8'000'000'000 | 19.446 s     | 0.569 s            | 18.434 s - 20.636 s  | 10             | 42.3 GB             |
 
 
 ## Running
